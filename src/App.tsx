@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import type { Place } from './types'
 import { loadPlaces, savePlaces } from './lib/storage'
 import HomeView from './components/HomeView'
@@ -14,9 +14,11 @@ export default function App() {
     savePlaces(places)
   }, [places])
 
-  // 画面遷移時にページ最上部へ戻す。
-  useEffect(() => {
+  // 画面遷移時にページ最上部へ戻す（描画前に実行してスクロール位置の持ち越しを防ぐ）。
+  useLayoutEffect(() => {
     window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
   }, [view])
 
   if (view === 'places') {

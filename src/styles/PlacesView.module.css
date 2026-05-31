@@ -15,11 +15,16 @@
 }
 
 .iconBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 50%;
   color: var(--accent);
-  padding: 8px 14px;
+  padding: 0;
   font-size: 18px;
   font-weight: 500;
 }
@@ -86,6 +91,35 @@
   background: none;
   border: none;
   color: var(--accent);
+}
+
+.confirmText {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cancelBtn {
+  flex: 1;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text);
+}
+
+.confirmDeleteBtn {
+  flex: 1;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 600;
 }
 
 .empty {

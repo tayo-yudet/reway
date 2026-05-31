@@ -13,6 +13,8 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [label, setLabel] = useState('')
   const [query, setQuery] = useState('')
+  // 削除確認モーダルの対象。
+  const [deleteTarget, setDeleteTarget] = useState<Place | null>(null)
 
   function openAdd() {
     setEditingId(null)
@@ -45,9 +47,12 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
     closeForm()
   }
 
-  function remove(id: string) {
+  function confirmRemove() {
+    if (!deleteTarget) return
+    const id = deleteTarget.id
     onChange(places.filter((p) => p.id !== id))
     if (editingId === id) closeForm()
+    setDeleteTarget(null)
   }
 
   return (
@@ -76,7 +81,7 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
               <button
                 type="button"
                 className={styles.deleteBtn}
-                onClick={() => remove(p.id)}
+                onClick={() => setDeleteTarget(p)}
                 aria-label="削除"
               >
                 削除
@@ -117,6 +122,28 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
             >
               {editingId ? '更新' : '追加'}
             </button>
+          </div>
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div className={styles.overlay} onClick={() => setDeleteTarget(null)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <p className={styles.confirmText}>
+              「{deleteTarget.label}」を削除しますか？
+            </p>
+            <div className={styles.confirmActions}>
+              <button
+                type="button"
+                className={styles.cancelBtn}
+                onClick={() => setDeleteTarget(null)}
+              >
+                キャンセル
+              </button>
+              <button type="button" className={styles.confirmDeleteBtn} onClick={confirmRemove}>
+                削除
+              </button>
+            </div>
           </div>
         </div>
       )}
