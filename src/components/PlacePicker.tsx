@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Place } from "../types";
 import { CURRENT_LOCATION } from "../types";
 import styles from "../styles/PlacePicker.module.css";
@@ -18,6 +18,15 @@ export default function PlacePicker({
   onClose,
 }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
+
+  // シート表示中は背景ページのスクロールをロックする。
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
   // 先頭に「現在地」を出す。
   const options = [CURRENT_LOCATION, ...places];
