@@ -36,11 +36,16 @@
 }
 
 .handle {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  /* 行の padding(8px) を相殺し、フレーム全体に当たり判定を広げる。 */
+  margin: -8px 0 -8px -8px;
+  padding: 0 8px 0 12px;
   background: none;
   border: none;
   color: var(--muted);
   font-size: 20px;
-  padding: 4px 6px;
   touch-action: none;
   cursor: grab;
 }
