@@ -74,7 +74,7 @@
   max-width: 400px;
   background: var(--surface);
   border-radius: 16px;
-  padding: 16px 16px 40px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
