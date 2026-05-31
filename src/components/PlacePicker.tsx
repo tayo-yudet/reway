@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Place } from '../types'
+import { CURRENT_LOCATION } from '../types'
 import styles from '../styles/PlacePicker.module.css'
 
 interface Props {
@@ -13,6 +14,9 @@ interface Props {
 export default function PlacePicker({ places, single = false, onAdd, onClose }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set())
 
+  // 先頭に「現在地」を出す。
+  const options = [CURRENT_LOCATION, ...places]
+
   function toggle(id: string) {
     setChecked((prev) => {
       const next = new Set(prev)
@@ -23,7 +27,7 @@ export default function PlacePicker({ places, single = false, onAdd, onClose }: 
   }
 
   function handleAdd() {
-    const selected = places.filter((p) => checked.has(p.id))
+    const selected = options.filter((p) => checked.has(p.id))
     if (selected.length > 0) onAdd(selected)
   }
 
@@ -36,11 +40,11 @@ export default function PlacePicker({ places, single = false, onAdd, onClose }: 
             閉じる
           </button>
         </div>
-        {places.length === 0 ? (
+        {options.length === 0 ? (
           <p className={styles.empty}>保存済みの場所はありません。</p>
         ) : (
           <ul className={styles.list}>
-            {places.map((p) => (
+            {options.map((p) => (
               <li key={p.id}>
                 {single ? (
                   <button
@@ -50,7 +54,7 @@ export default function PlacePicker({ places, single = false, onAdd, onClose }: 
                   >
                     <span className={styles.itemText}>
                       <span className={styles.label}>{p.label}</span>
-                      <span className={styles.query}>{p.query}</span>
+                      {p.query && <span className={styles.query}>{p.query}</span>}
                     </span>
                   </button>
                 ) : (
@@ -63,7 +67,7 @@ export default function PlacePicker({ places, single = false, onAdd, onClose }: 
                     />
                     <span className={styles.itemText}>
                       <span className={styles.label}>{p.label}</span>
-                      <span className={styles.query}>{p.query}</span>
+                      {p.query && <span className={styles.query}>{p.query}</span>}
                     </span>
                   </label>
                 )}

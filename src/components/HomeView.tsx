@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Place, Waypoint } from '../types'
+import { CURRENT_LOCATION } from '../types'
 import { buildGoogleMapsUrl, MAX_WAYPOINTS } from '../lib/mapsUrl'
 import WaypointList from './WaypointList'
 import PlacePicker from './PlacePicker'
@@ -7,10 +8,6 @@ import styles from '../styles/HomeView.module.css'
 
 // 地点の最大数（出発 + 中継 + 目的地）。waypoints 上限 9 = 中継9。
 const MAX_POINTS = MAX_WAYPOINTS + 2
-
-function newWaypoint(value = ''): Waypoint {
-  return { id: crypto.randomUUID(), value }
-}
 
 // 'bulk' = 複数チェックして末尾に追加。{ row: id } = その行に1件反映。
 type Picker = 'bulk' | { row: string } | null
@@ -21,34 +18,26 @@ interface Props {
 }
 
 export default function HomeView({ places, onOpenPlaces }: Props) {
-  const [waypoints, setWaypoints] = useState<Waypoint[]>(() => [newWaypoint(), newWaypoint()])
+  // 出発地のデフォルトは「現在地」（query 空 → origin 省略）。
+  const [waypoints, setWaypoints] = useState<Waypoint[]>(() => [
+    { id: crypto.randomUUID(), value: CURRENT_LOCATION.query, label: CURRENT_LOCATION.label },
+  ])
   const [picker, setPicker] = useState<Picker>(null)
 
   const url = buildGoogleMapsUrl(waypoints.map((w) => w.value))
   const canAdd = waypoints.length < MAX_POINTS
 
-  function updateValue(id: string, value: string) {
-    setWaypoints((prev) => prev.map((w) => (w.id === id ? { ...w, value } : w)))
-  }
-
-  // 編集で query が変わったとき、表示名（label）を解除する。
-  function clearLabel(id: string) {
-    setWaypoints((prev) => prev.map((w) => (w.id === id ? { ...w, label: undefined } : w)))
-  }
-
-  // 3地点以上ならその行を削除。2地点以下なら入力内容のみクリアする。
+  // 2地点以上ならその行を削除。1地点以下なら現在地に戻す。
   function removeWaypoint(id: string) {
     setWaypoints((prev) =>
-      prev.length > 2
+      prev.length > 1
         ? prev.filter((w) => w.id !== id)
-        : prev.map((w) => (w.id === id ? { ...w, value: '', label: undefined } : w)),
+        : prev.map((w) =>
+            w.id === id
+              ? { ...w, value: CURRENT_LOCATION.query, label: CURRENT_LOCATION.label }
+              : w,
+          ),
     )
-  }
-
-  function addWaypoint() {
-    if (!canAdd) return
-    // 既存の地点の後ろ（末尾）に追加する。
-    setWaypoints((prev) => [...prev, newWaypoint()])
   }
 
   // 指定した行に保存済み場所を1件だけ反映する。表示名は label を使う。
@@ -61,14 +50,15 @@ export default function HomeView({ places, onOpenPlaces }: Props) {
     setPicker(null)
   }
 
-  // チェックした保存済み場所を地点として追加する（出発欄は対象外）。
-  // まず先頭以外の空欄を左から埋め、残りは末尾に新規地点として追加する。
+  // チェックした保存済み場所を地点として追加する。
+  // 先頭（出発地）以外の空欄を左から埋め、残りは末尾に新規地点として追加する。
+  // 出発地が空でも埋めず、現在地起点のまま新規地点を追加する。
   function handleAddPlaces(selected: Place[]) {
     setWaypoints((prev) => {
       const next = [...prev]
       const queue = [...selected]
 
-      // 1) 先頭（出発地）以外の空欄を左から埋める。
+      // 1) 先頭以外の空欄を左から埋める。
       for (let i = 1; i < next.length && queue.length > 0; i++) {
         if (next[i].value.trim() === '') {
           const p = queue.shift()!
@@ -99,25 +89,18 @@ export default function HomeView({ places, onOpenPlaces }: Props) {
       <WaypointList
         waypoints={waypoints}
         onReorder={setWaypoints}
-        onChange={updateValue}
-        onClearLabel={clearLabel}
         onRemove={removeWaypoint}
         onPickPlace={(id) => setPicker({ row: id })}
       />
 
-      <div className={styles.addRow}>
-        <button type="button" className={styles.addBtn} onClick={addWaypoint} disabled={!canAdd}>
-          + 地点を追加
-        </button>
-        <button
-          type="button"
-          className={styles.addBtn}
-          onClick={() => setPicker('bulk')}
-          disabled={!canAdd}
-        >
-          ★ 保存済みから追加
-        </button>
-      </div>
+      <button
+        type="button"
+        className={styles.addBtn}
+        onClick={() => setPicker('bulk')}
+        disabled={!canAdd}
+      >
+        ＋ 追加
+      </button>
       {!canAdd && <p className={styles.note}>地点は最大 {MAX_POINTS} 件までです。</p>}
 
       <button type="button" className={styles.openBtn} onClick={openInGoogleMaps} disabled={!url}>
@@ -125,7 +108,8 @@ export default function HomeView({ places, onOpenPlaces }: Props) {
       </button>
 
       <button type="button" className={styles.placesLink} onClick={onOpenPlaces}>
-        保存された場所 &gt;
+        <span>保存済みの場所</span>
+        <span>&gt;</span>
       </button>
 
       {picker && typeof picker === 'object' && (

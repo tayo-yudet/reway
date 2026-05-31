@@ -6,6 +6,13 @@ export interface Place {
   query: string
 }
 
+/** 「現在地」を表す特別な選択肢。query が空なので URL では origin 省略＝現在地起点。 */
+export const CURRENT_LOCATION: Place = {
+  id: '__current_location__',
+  label: '現在地',
+  query: '',
+}
+
 /** ホームで編集中の1地点。保存はされず使い捨て。 */
 export interface Waypoint {
   /** D&D 用の安定したキー */

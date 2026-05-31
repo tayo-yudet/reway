@@ -8,22 +8,28 @@
   padding: 8px;
 }
 
-.input {
+.pick {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: center;
   border: none;
   outline: none;
   padding: 8px;
   background: transparent;
-  color: var(--text);
+  text-align: left;
+  font-size: 16px;
 }
 
-.pickBtn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: var(--accent);
-  padding: 4px;
+.value {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--muted);
 }
 
 .removeBtn {
@@ -33,6 +39,11 @@
   font-size: 22px;
   line-height: 1;
   padding: 4px 8px;
+}
+
+.removeBtn:disabled {
+  color: var(--border);
+  cursor: not-allowed;
 }
 
 .handle {

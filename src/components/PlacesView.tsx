@@ -9,20 +9,27 @@ interface Props {
 }
 
 export default function PlacesView({ places, onChange, onBack }: Props) {
+  const [formOpen, setFormOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [label, setLabel] = useState('')
   const [query, setQuery] = useState('')
 
-  function resetForm() {
+  function openAdd() {
     setEditingId(null)
     setLabel('')
     setQuery('')
+    setFormOpen(true)
   }
 
-  function startEdit(place: Place) {
+  function openEdit(place: Place) {
     setEditingId(place.id)
     setLabel(place.label)
     setQuery(place.query)
+    setFormOpen(true)
+  }
+
+  function closeForm() {
+    setFormOpen(false)
   }
 
   function submit() {
@@ -35,54 +42,26 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
     } else {
       onChange([...places, { id: crypto.randomUUID(), label: l, query: q }])
     }
-    resetForm()
+    closeForm()
   }
 
   function remove(id: string) {
     onChange(places.filter((p) => p.id !== id))
-    if (editingId === id) resetForm()
+    if (editingId === id) closeForm()
   }
 
   return (
     <div className={styles.container}>
-      <div className={styles.topbar}>
-        <button type="button" className={styles.backBtn} onClick={onBack}>
-          &lt; 戻る
+      <div className={styles.header}>
+        <button type="button" className={styles.iconBtn} onClick={onBack} aria-label="戻る">
+          &lt;
         </button>
-        <h1 className={styles.title}>保存された場所</h1>
+        <button type="button" className={styles.iconBtn} onClick={openAdd} aria-label="場所を追加">
+          ＋
+        </button>
       </div>
 
-      <div className={styles.form}>
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="愛称（例: 会社）"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-        />
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="住所・地名（例: 東京都千代田区丸の内1-1）"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <div className={styles.formActions}>
-          <button
-            type="button"
-            className={styles.saveBtn}
-            onClick={submit}
-            disabled={!label.trim() || !query.trim()}
-          >
-            {editingId ? '更新' : '追加'}
-          </button>
-          {editingId && (
-            <button type="button" className={styles.cancelBtn} onClick={resetForm}>
-              キャンセル
-            </button>
-          )}
-        </div>
-      </div>
+      <h1 className={styles.title}>保存済みの場所</h1>
 
       {places.length === 0 ? (
         <p className={styles.empty}>まだ保存された場所はありません。</p>
@@ -90,7 +69,7 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
         <ul className={styles.list}>
           {places.map((p) => (
             <li key={p.id} className={styles.item}>
-              <div className={styles.itemText} onClick={() => startEdit(p)}>
+              <div className={styles.itemText} onClick={() => openEdit(p)}>
                 <span className={styles.label}>{p.label}</span>
                 <span className={styles.query}>{p.query}</span>
               </div>
@@ -105,6 +84,41 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
             </li>
           ))}
         </ul>
+      )}
+
+      {formOpen && (
+        <div className={styles.overlay} onClick={closeForm}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <span>{editingId ? '場所を編集' : '場所を追加'}</span>
+              <button type="button" className={styles.closeBtn} onClick={closeForm}>
+                閉じる
+              </button>
+            </div>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="表示名"
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+            />
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="住所・地名"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.saveBtn}
+              onClick={submit}
+              disabled={!label.trim() || !query.trim()}
+            >
+              {editingId ? '更新' : '追加'}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )

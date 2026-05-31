@@ -20,22 +20,18 @@ import WaypointRow from './WaypointRow'
 interface Props {
   waypoints: Waypoint[]
   onReorder: (waypoints: Waypoint[]) => void
-  onChange: (id: string, value: string) => void
-  onClearLabel: (id: string) => void
   onRemove: (id: string) => void
   onPickPlace: (id: string) => void
 }
 
 function placeholderFor(index: number): string {
-  if (index === 0) return '出発地（空欄なら現在地）'
+  if (index === 0) return '現在地'
   return `地点 ${index}`
 }
 
 export default function WaypointList({
   waypoints,
   onReorder,
-  onChange,
-  onClearLabel,
   onRemove,
   onPickPlace,
 }: Props) {
@@ -44,12 +40,6 @@ export default function WaypointList({
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
-
-  // 並べ替え開始時、フォーカス中の入力欄があればキーボードを閉じる。
-  function handleDragStart() {
-    const el = document.activeElement
-    if (el instanceof HTMLElement) el.blur()
-  }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
@@ -61,20 +51,15 @@ export default function WaypointList({
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={waypoints.map((w) => w.id)} strategy={verticalListSortingStrategy}>
         {waypoints.map((w, index) => (
           <WaypointRow
             key={w.id}
             waypoint={w}
             placeholder={placeholderFor(index)}
-            onChange={(value) => onChange(w.id, value)}
-            onClearLabel={() => onClearLabel(w.id)}
+            // 1地点のみ＆現在地（value 空）のときは削除不可。
+            disableRemove={waypoints.length === 1 && w.value.trim() === ''}
             onRemove={() => onRemove(w.id)}
             onPickPlace={() => onPickPlace(w.id)}
           />
