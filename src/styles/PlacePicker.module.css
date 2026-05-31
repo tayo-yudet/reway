@@ -28,8 +28,8 @@
   font-weight: 600;
   background: var(--surface);
   /* シートの上 padding(16px) を相殺し、スクロール時に上端まで背景で覆う。 */
-  margin: -16px -16px 12px;
-  padding: 16px;
+  margin: -16px -16px 20px;
+  padding: 4px 16px 8px;
 }
 
 .headerAddBtn {
