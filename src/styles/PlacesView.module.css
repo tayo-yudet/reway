@@ -1,0 +1,121 @@
+.container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  padding: 4px 0;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  outline: none;
+  color: var(--text);
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.saveBtn {
+  flex: 1;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.saveBtn:disabled {
+  background: var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--text);
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.itemText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.query {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 14px;
+}

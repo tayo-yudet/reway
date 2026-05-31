@@ -1,0 +1,46 @@
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --border: #d1d1d6;
+  --text: #1c1c1e;
+  --muted: #8e8e93;
+  --accent: #1a73e8;
+  --accent-text: #ffffff;
+  --danger: #ff3b30;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Helvetica Neue', Arial,
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+#root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+input,
+button {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+button {
+  cursor: pointer;
+}

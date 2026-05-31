@@ -1,0 +1,50 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  padding: 8px;
+  background: transparent;
+  color: var(--text);
+}
+
+.pickBtn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--accent);
+  padding: 4px;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 22px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+.handle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  padding: 4px 6px;
+  touch-action: none;
+  cursor: grab;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
