@@ -14,6 +14,11 @@ export default function App() {
     savePlaces(places)
   }, [places])
 
+  // 画面遷移時にページ最上部へ戻す。
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [view])
+
   if (view === 'places') {
     return <PlacesView places={places} onChange={setPlaces} onBack={() => setView('home')} />
   }

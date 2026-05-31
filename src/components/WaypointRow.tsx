@@ -95,7 +95,11 @@ export default function WaypointRow({
           className={styles.pickBtn}
           // pointerdown でフォーカスが外れて消える前に確実に押せるようにする。
           onPointerDown={(e) => e.preventDefault()}
-          onClick={onPickPlace}
+          // ピッカーを開く前にキーボードを閉じる。
+          onClick={() => {
+            inputRef.current?.blur()
+            onPickPlace()
+          }}
           aria-label="保存済みの場所から選ぶ"
         >
           ★

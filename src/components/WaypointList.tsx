@@ -45,6 +45,12 @@ export default function WaypointList({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
 
+  // 並べ替え開始時、フォーカス中の入力欄があればキーボードを閉じる。
+  function handleDragStart() {
+    const el = document.activeElement
+    if (el instanceof HTMLElement) el.blur()
+  }
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (!over || active.id === over.id) return
@@ -55,7 +61,12 @@ export default function WaypointList({
   }
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <SortableContext items={waypoints.map((w) => w.id)} strategy={verticalListSortingStrategy}>
         {waypoints.map((w, index) => (
           <WaypointRow
