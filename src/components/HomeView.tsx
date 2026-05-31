@@ -41,7 +41,7 @@ export default function HomeView({ places, onOpenPlaces }: Props) {
     setWaypoints((prev) =>
       prev.length > 2
         ? prev.filter((w) => w.id !== id)
-        : prev.map((w) => (w.id === id ? { ...w, value: '' } : w)),
+        : prev.map((w) => (w.id === id ? { ...w, value: '', label: undefined } : w)),
     )
   }
 
