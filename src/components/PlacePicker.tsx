@@ -41,9 +41,16 @@ export default function PlacePicker({
       <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <span>{"保存済みの場所"}</span>
-          <button type="button" className={styles.closeBtn} onClick={onClose}>
-            閉じる
-          </button>
+          {!single && (
+            <button
+              type="button"
+              className={styles.headerAddBtn}
+              onClick={handleAdd}
+              disabled={checked.size === 0}
+            >
+              {checked.size > 0 ? `${checked.size}件 追加` : "追加"}
+            </button>
+          )}
         </div>
         {options.length === 0 ? (
           <p className={styles.empty}>保存済みの場所はありません。</p>
@@ -83,16 +90,6 @@ export default function PlacePicker({
               </li>
             ))}
           </ul>
-        )}
-        {!single && (
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={handleAdd}
-            disabled={checked.size === 0}
-          >
-            追加{checked.size > 0 ? `（${checked.size}件）` : ""}
-          </button>
         )}
       </div>
     </div>

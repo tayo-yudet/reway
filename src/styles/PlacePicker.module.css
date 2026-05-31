@@ -19,17 +19,29 @@
 }
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
-  margin-bottom: 12px;
+  background: var(--surface);
+  /* シートの上 padding(16px) を相殺し、スクロール時に上端まで背景で覆う。 */
+  margin: -16px -16px 12px;
+  padding: 16px;
 }
 
-.closeBtn {
+.headerAddBtn {
   background: none;
   border: none;
   color: var(--accent);
+  font-weight: 600;
+}
+
+.headerAddBtn:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
 }
 
 .empty {
@@ -81,19 +93,3 @@
   color: var(--muted);
 }
 
-.addBtn {
-  margin-top: 12px;
-  width: 100%;
-  background: var(--accent);
-  color: var(--accent-text);
-  border: none;
-  border-radius: 12px;
-  padding: 14px;
-  font-weight: 600;
-}
-
-.addBtn:disabled {
-  background: var(--border);
-  color: var(--muted);
-  cursor: not-allowed;
-}

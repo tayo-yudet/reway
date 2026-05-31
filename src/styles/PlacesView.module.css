@@ -87,12 +87,6 @@
   font-weight: 600;
 }
 
-.closeBtn {
-  background: none;
-  border: none;
-  color: var(--accent);
-}
-
 .confirmText {
   margin: 4px 0;
   font-size: 16px;

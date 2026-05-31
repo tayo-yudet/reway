@@ -96,9 +96,6 @@ export default function PlacesView({ places, onChange, onBack }: Props) {
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <span>{editingId ? '場所を編集' : '場所を追加'}</span>
-              <button type="button" className={styles.closeBtn} onClick={closeForm}>
-                閉じる
-              </button>
             </div>
             <input
               className={styles.input}
